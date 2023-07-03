@@ -11,6 +11,7 @@ const Demo = () => {
 
     const [allArticles, setAllArticles] = useState([]);
 
+    const [copied, setCopied] = useState('');
     useEffect(() => {
         const articlesFromLocalStorage = JSON.parse(localStorage.getItem('articles'));
 
@@ -37,6 +38,11 @@ const Demo = () => {
 
     }
 
+    const handleCopy = (copyUrl) => {
+        setCopied(copyUrl);
+        navigator.clipboard.writeText(copyUrl);
+        setTimeout(() => setCopied(false), 4000)
+    }
     return (
         <section className='mt-16 w-full max-w-xl '>
             <div className='flex flex-col w-full gap-2'>
@@ -71,10 +77,10 @@ const Demo = () => {
                             onClick={() => setArticle(article)}
                             className='link_card'
                         >
-                            <div className='copy_btn'>
+                            <div className='copy_btn' onClick={() => handleCopy(article.url)}>
                                 <img
-                                    src={copy}
-                                    alt='copy_icon'
+                                    src={copied === article.url ? tick : copy}
+                                    alt={copied === article.url ? "tick_icon" : "copy_icon"}
                                     className='w-[40%] h-[40%] object-contain'
                                 />
                             </div>
@@ -101,8 +107,10 @@ const Demo = () => {
                                 <h2 className='font-satoshi font-bold text-gray-600 text-xl'>
                                     Article <span className='blue_gradient'>Summary</span>
                                 </h2>
-                                <div className='sumarry_box'>
-                                    <p>{article.summary}</p>
+                                <div className='summary_box'>
+                                    <p className='font-inter font-medium text-sm text-gray-700'>
+                                        {article.summary}
+                                    </p>
                                 </div>
                             </div>
                         )
